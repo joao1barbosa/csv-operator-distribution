@@ -1,123 +1,74 @@
-# CSV-Operator-Assignment
+# 📊 CSV Operator Distribution
 
-Este projeto consiste na solução de um desafio técnico para desenvolvedor fullstack. Dentre as funcionalides estão:
+> A full-stack technical challenge: bulk-register clients from a CSV upload and distribute them across operators — with CSV import/export and a per-layer tested NestJS API. TypeScript end to end.
 
-- Visualização: Permite visualizar os operadores cadastrados e os clientes designados a eles.
-- Cadastro de Clientes: Oferece a funcionalidade de enviar um arquivo CSV para o cadastro imediato de clientes.
-- Exportação de Clientes: Possibilita baixar um arquivo CSV com a lista de todos os clientes cadastrados.
+## 📋 Overview
 
-Mais detalhes no arquivo [SinkaTest](./docs/SinkaTest.md).
+Solution to a full-stack technical challenge. The app lets you view operators and the
+clients assigned to them, register clients in bulk by uploading a CSV (each client is
+distributed to an operator on upload), and export all clients back to CSV.
 
-## 📷 Demonstrações
+- View operators and their assigned clients.
+- Upload a CSV to register clients immediately, distributed across operators (round-robin).
+- Export all clients to a CSV file.
+- Redistribute existing clients across operators.
 
-### Dashboard
+## 🚀 Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | TypeScript, React, Next.js, React Query, React Hook Form, Zod, Tailwind, shadcn/ui |
+| **Backend** | NestJS, Multer, csv-parser, fast-csv |
+| **ORM / DB** | Prisma · MySQL |
+| **Testing** | Jest |
+| **Runtime** | Docker / Docker Compose |
+
+## 📷 Demo
 
 <div align="center">
-  <img src="./docs/dashboard.gif" alt="Dashboard">
+  <img src="./docs/dashboard.gif" alt="Dashboard"><br/>
+  <img src="./docs/upload.gif" alt="CSV upload"><br/>
+  <img src="./docs/responsivite.gif" alt="Responsive layout">
 </div>
 
-### Upload de arquivo
+Database schema:
 
-<div align="center">
-  <img src="./docs/upload.gif" alt="Upload">
-</div>
+<p align="center"><img src="./docs/db.png" alt="Database schema"></p>
 
-### Responsividade
+## 🏗 Architecture
 
-<div align="center">
-  <img src="./docs/responsivite.gif" alt="Responsividade">
-</div>
+A NestJS API with clear layering — **controllers → services → repositories**, with DTOs,
+entities, and validators per module (`clients`, `operators`) — behind a Next.js frontend.
+CSV parsing is streamed; client distribution is a round-robin over the available operators.
 
-## 🎲 Estrutura do Banco de Dados
+## 🧪 Testing
 
-<p align="center">
-    <img src="./docs/db.png"  alt="Estrutura do Banco de Dados">
-</p>
+Unit tests with Jest, **one spec per layer** (service, controller, validator):
 
-## 📱 Technologias
+```bash
+cd backend && yarn test
+```
 
-- **TypeScript**
-- **React**
-- **Next.js**
-- **React Query**
-- **React Hook Form**
-- **Zod**
-- **Tailwind**
-- **Componentes do ShadCN**
-- **NestJS**
-- **Multer**
-- **CSV-parser**
-- **Fast-CSV**
-- **Prima**
-- **Jest**
-- **MySQL**
+## 🔧 How to Run Locally
 
-## 🌐 Variáveis Ambiente
+**Prerequisites:** Docker + Docker Compose V2.
 
-Como a aplicação é construída usando containers docker e não é uma aplicação que será mantida em produção, optei por deixar o arquivo **.env.example** com as variáveis já configuradas.
-Desta forma é necessário apenas renomear o aquivo para **.env**.
+The `.env.example` ships pre-filled (this is not a production app) — just copy it to `.env`.
 
-## 🏁 Dependências
-
-- Docker
-- Docker Compose V2
-
-## 🏗 Setup e Run
-
-Para construir e executar a aplicação, basta ter as dependências instaladas e executar o comando abaixo:
-
-```sh
+```bash
 docker compose up --build -d
 ```
 
-## 📋 Endpoints da API
+## 📡 API Reference
 
-### App
+**Operators** — `POST /operators`, `GET /operators`, `GET /operators/:id`,
+`PATCH /operators/:id`, `DELETE /operators/:id`.
 
-- **GET** `/` - Retorna "API on!".
+**Clients** — `GET /clients`, `GET /clients/:id`, `POST /clients`, `PATCH /clients/:id`,
+`DELETE /clients/:id`, `POST /clients/upload` (CSV, form-data `file`),
+`GET /clients/download` (CSV export), `GET /clients/redistribute`.
 
-### Operators
+## 👤 Author
 
-- **POST** `/operators` - Cria um operador.
-  - **Body:** `CreateOperatorDto`
-- **GET** `/operators` - Retorna todos os operadores.
-
-- **GET** `/operators/:id` - Retorna um operador pelo ID.
-
-  - **Params:** `id` (number)
-
-- **PATCH** `/operators/:id` - Atualiza um operador.
-
-  - **Params:** `id` (number)
-  - **Body:** `UpdateOperatorDto`
-
-- **DELETE** `/operators/:id` - Remove um operador.
-  - **Params:** `id` (number)
-
-### Clients
-
-- **POST** `/clients` - Cria um cliente.
-
-  - **Body:** `CreateClientDto`
-
-- **GET** `/clients` - Retorna todos os clientes.
-
-- **GET** `/clients/download` - Exporta clientes em CSV.
-
-- **GET** `/clients/redistribute` - Redistribui clientes entre operadores.
-
-- **POST** `/clients/upload` - Faz upload de um CSV de clientes.
-
-  - **Form Data:** `file` (CSV)
-
-- **GET** `/clients/:id` - Retorna um cliente pelo ID.
-
-  - **Params:** `id` (number)
-
-- **PATCH** `/clients/:id` - Atualiza um cliente.
-
-  - **Params:** `id` (number)
-  - **Body:** `UpdateClientDto`
-
-- **DELETE** `/clients/:id` - Remove um cliente.
-  - **Params:** `id` (number)
+**João Barbosa** — Software Engineer (backend / platform).
+[LinkedIn](https://www.linkedin.com/in/joao1barbosa/) · [GitHub](https://github.com/joao1barbosa)
